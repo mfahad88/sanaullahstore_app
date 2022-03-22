@@ -1,10 +1,15 @@
+import 'dart:async';
 import 'dart:io';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class MyWebView extends StatefulWidget {
+
+
+
   MyWebView();
 
   @override
@@ -12,7 +17,8 @@ class MyWebView extends StatefulWidget {
 }
 
 class _MyWebViewState extends State<MyWebView> {
-
+  final Completer<WebViewController> _controller =
+  Completer<WebViewController>();
   double loadingPercentage=0;
   bool isLoading=false;
   @override
@@ -23,11 +29,20 @@ class _MyWebViewState extends State<MyWebView> {
   }
   @override
   Widget build(BuildContext context) {
+    WebViewController controller;
+
+
     return Stack(
       children: [
         WebView(
+
           initialUrl: "https://www.sanaullastore.com/",
           javascriptMode: JavascriptMode.unrestricted,
+          onWebViewCreated: (WebViewController webViewController) {
+
+            controller = webViewController;
+            _controller.complete(webViewController);
+          },
           onProgress: (progress) {
             setState(() {
               loadingPercentage=progress/100;
@@ -53,5 +68,7 @@ class _MyWebViewState extends State<MyWebView> {
       ],
 
     );
+
+
   }
 }

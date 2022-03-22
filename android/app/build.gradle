@@ -48,8 +48,16 @@ android {
             signingConfig signingConfigs.debug
         }
     }
-}
 
+
+}
+dependencies{
+    implementation platform('com.google.firebase:firebase-bom:29.2.1')
+    implementation 'com.google.firebase:firebase-messaging:23.0.2'
+    implementation 'com.google.firebase:firebase-analytics'
+
+}
 flutter {
     source '../..'
 }
+apply plugin: 'com.google.gms.google-services'

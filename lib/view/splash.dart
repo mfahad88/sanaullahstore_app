@@ -3,14 +3,18 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sanaullahstore_app/view/CirclePaint.dart';
 import 'package:sanaullahstore_app/view/home_screen.dart';
-import 'package:http/http.dart' as http;
-
-void main() {
-
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: const FirebaseOptions(apiKey: "AIzaSyACIAEVFtIxu3atEHTWDykfOMWtevo5-oo",
+        appId: "1:437042386926:android:d951ee771b67d85b32a0ff", messagingSenderId: "437042386926", projectId: "sanaullastore-1ed15")
+  ).then((value) => print(value));
   runApp(MaterialApp(home: SplashScreen(),));
 }
 
@@ -21,12 +25,16 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  late FirebaseMessaging messaging;
 
   @override
   void initState() {
 
     super.initState();
-
+    messaging = FirebaseMessaging.instance;
+    messaging.getToken().then((value){
+      print("here ${value}");
+    });
 
     Timer(
         Duration(seconds: 3),

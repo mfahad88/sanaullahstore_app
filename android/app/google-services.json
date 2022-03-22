@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "437042386926",
+    "project_id": "sanaullastore-1ed15",
+    "storage_bucket": "sanaullastore-1ed15.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:437042386926:android:d951ee771b67d85b32a0ff",
+        "android_client_info": {
+          "package_name": "com.example.sanaullahstore_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "437042386926-um92139c2l45bugnem3n03p9eties36l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACIAEVFtIxu3atEHTWDykfOMWtevo5-oo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "437042386926-um92139c2l45bugnem3n03p9eties36l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
