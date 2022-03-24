@@ -8,17 +8,17 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 class MyWebView extends StatefulWidget {
 
+  Function (BuildContext context,WebViewController webViewController) onWebViewCreated;
 
-
-  MyWebView();
+  MyWebView({required this.onWebViewCreated});
 
   @override
   _MyWebViewState createState() => _MyWebViewState();
 }
 
 class _MyWebViewState extends State<MyWebView> {
-  final Completer<WebViewController> _controller =
-  Completer<WebViewController>();
+
+
   double loadingPercentage=0;
   bool isLoading=false;
   @override
@@ -26,22 +26,28 @@ class _MyWebViewState extends State<MyWebView> {
     super.initState();
     if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
     if (Platform.isIOS) WebView.platform = CupertinoWebView();
+    // controller.loadUrl("http://google.com");
   }
   @override
   Widget build(BuildContext context) {
-    WebViewController controller;
-
-
+    final Completer<WebViewController> _completer =
+    Completer<WebViewController>();
+    WebViewController _webViewController;
+    _completer.future.then((controller) {
+      _webViewController = controller;
+      Map<String, String> header =  {'x-is-app': true.toString()};
+      _webViewController.loadUrl("https://www.sanaullastore.com/", headers: header);
+    });
     return Stack(
       children: [
         WebView(
 
-          initialUrl: "https://www.sanaullastore.com/",
-          javascriptMode: JavascriptMode.unrestricted,
-          onWebViewCreated: (WebViewController webViewController) {
+          // initialUrl: "https://www.sanaullastore.com/",
 
-            controller = webViewController;
-            _controller.complete(webViewController);
+          javascriptMode: JavascriptMode.unrestricted,
+          onWebViewCreated: (WebViewController webViewController){
+            _completer.complete(webViewController);
+            widget.onWebViewCreated(context,webViewController);
           },
           onProgress: (progress) {
             setState(() {

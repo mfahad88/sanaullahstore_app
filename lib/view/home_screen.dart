@@ -8,20 +8,17 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 class HomeScreen extends StatelessWidget {
   var loadingPercentage = 0;
-
-  HomeScreen();
+  late WebViewController webViewController;
 
   @override
   Widget build(BuildContext context) {
-
     // registerNotification();
     if (Platform.isAndroid) WebView.platform = AndroidWebView();
     Future<bool> isConnected=_checkInternetConnection();
     FirebaseMessaging.onMessage.listen((RemoteMessage event) {
       print("message recieved");
       print(event.notification!.body);
-
-      /*showDialog(
+      showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
@@ -32,11 +29,25 @@ class HomeScreen extends StatelessWidget {
                   child: Text("Ok"),
                   onPressed: () {
                     Navigator.of(context).pop();
+                    webViewController.loadUrl(event.notification!.body.toString());
                   },
                 )
               ],
             );
-          });*/
+          });
+      /*if(event.notification!.title=='url'){
+        webViewController.loadUrl(event.notification!.body.toString());
+      }*/
+
+
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((event) {
+      print(event.notification!.body);
+      if(event.notification!.title=='url'){
+        webViewController.loadUrl(event.notification!.body.toString());
+      }
+
     });
     return Scaffold(
         body: SafeArea(
@@ -45,7 +56,17 @@ class HomeScreen extends StatelessWidget {
             builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
                     if(snapshot.data==true){
-                      return MyWebView();
+                      return Expanded(
+
+                        child: WillPopScope(
+                          onWillPop: _onBack,
+                          child: MyWebView(
+                            onWebViewCreated: (context, webViewController) {
+                              this.webViewController=webViewController;
+                            },
+                          ),
+                        ),
+                      );
                     }else{
                       return Center(child: Text(
                           'Please check your internet connection and retry'));
@@ -60,6 +81,20 @@ class HomeScreen extends StatelessWidget {
       );
   }
 
+  Future<bool> _onBack() async {
+
+    bool goBack = false;
+    var value = await webViewController.canGoBack(); // check webview can go back
+    if (value) {
+      webViewController.goBack(); // perform webview back operation
+      goBack= false;
+    }else{
+      goBack=true;
+    }
+    print("Backpresssed---->${goBack}");
+    return goBack;
+
+  }
 
   Future<bool> _checkInternetConnection() async {
     try {
